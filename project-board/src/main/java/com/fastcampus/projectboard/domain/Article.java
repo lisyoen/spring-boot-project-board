@@ -29,7 +29,7 @@ public class Article extends AuditingFields {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Setter @Column(nullable = false) private String title;    // 제목
+    @Setter @Column(nullable = false) private String title;  // 제목
     @Setter @Column(nullable = false, length = 10000) private String content;  // 본문
 
     @Setter private String hashtag;  // 해시태그
