@@ -1,6 +1,7 @@
 package com.fastcampus.projectboard.controller;
 
 import com.fastcampus.projectboard.config.SecurityConfig;
+import com.fastcampus.projectboard.config.TestSecurityConfig;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @DisplayName("View 컨트롤러 - 루트 페이지")
-@Import(SecurityConfig.class)
+@Import(TestSecurityConfig.class)
 @WebMvcTest(MainController.class)
 class MainControllerTest {
     private final MockMvc mvc;
@@ -23,6 +24,7 @@ class MainControllerTest {
         this.mvc = mvc;
     }
 
+    @DisplayName("[view][GET] 루트 페이지 -> 게시글 리스트 (게시판) 페이지 Redirection")
     @Test
     void givenNothing_whenRequestingRootPage_thenRedirectsToArticlesPage() throws Exception {
         //given
@@ -31,7 +33,6 @@ class MainControllerTest {
         mvc.perform(get("/"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("forward:/articles"))
-                .andExpect(forwardedUrl("/articles"))
-                .andDo(MockMvcResultHandlers.print());
+                .andExpect(forwardedUrl("/articles"));
     }
 }
