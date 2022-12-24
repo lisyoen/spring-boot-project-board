@@ -27,6 +27,17 @@ spring:
     detection-strategy: annotated
   thymeleaf3:
     decoupled-logic: true
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            clientId: "${OAUTH2_CLIENT_ID}"
+            clientSecret: "${OAUTH2_CLIENT_PW}"
+            redirect-uri: "{baseUrl}/login/oauth2/code/google"
+            scope:
+              - email
+              - profile
 
 
 ---
