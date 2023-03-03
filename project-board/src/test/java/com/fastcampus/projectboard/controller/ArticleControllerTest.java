@@ -5,7 +5,6 @@ import com.fastcampus.projectboard.domain.constant.FormStatus;
 import com.fastcampus.projectboard.domain.constant.SearchType;
 import com.fastcampus.projectboard.dto.ArticleDto;
 import com.fastcampus.projectboard.dto.ArticleWithCommentsDto;
-import com.fastcampus.projectboard.dto.HashtagDto;
 import com.fastcampus.projectboard.dto.UserAccountDto;
 import com.fastcampus.projectboard.dto.request.ArticleRequest;
 import com.fastcampus.projectboard.dto.response.ArticleResponse;
@@ -68,8 +67,7 @@ class ArticleControllerTest {
                 .andExpect(view().name("articles/index"))
                 .andExpect(model().attributeExists("articles"))
                 .andExpect(model().attributeExists("paginationBarNumbers"))
-                .andExpect(model().attributeExists("searchTypes"))
-                .andExpect(model().attribute("searchTypeHashtag", SearchType.HASHTAG));
+                .andExpect(model().attributeExists("searchTypes"));
 
         then(articleService).should().searchArticles(eq(null), eq(null), any(Pageable.class));
         then(paginationService).should().getPaginationBarNumbers(anyInt(), anyInt());
@@ -160,8 +158,7 @@ class ArticleControllerTest {
                 .andExpect(view().name("articles/detail"))
                 .andExpect(model().attributeExists("article"))
                 .andExpect(model().attributeExists("articleComments"))
-                .andExpect(model().attribute("totalCount", totalCount))
-                .andExpect(model().attribute("searchTypeHashtag", SearchType.HASHTAG));
+                .andExpect(model().attribute("totalCount", totalCount));
 
         then(articleService).should().getArticleWithComments(articleId);
         then(articleService).should().getArticleCount();
@@ -224,8 +221,7 @@ class ArticleControllerTest {
                 .andExpect(model().attribute("articles", Page.empty()))
                 .andExpect(model().attribute("hashtags", hashtags))
                 .andExpect(model().attribute("searchType", SearchType.HASHTAG))
-                .andExpect(model().attributeExists("paginationBarNumbers"))
-                .andExpect(model().attribute("searchTypeHashtag", SearchType.HASHTAG));
+                .andExpect(model().attributeExists("paginationBarNumbers"));
 
         then(articleService).should().searchArticlesViaHashtag(eq(hashtag), any(Pageable.class));
         then(paginationService).should().getPaginationBarNumbers(anyInt(), anyInt());
@@ -251,7 +247,7 @@ class ArticleControllerTest {
     @Test
     void givenNewArticleInfo_whenRequesting_thenSavesNewArticle() throws Exception {
         // Given
-        ArticleRequest articleRequest = ArticleRequest.of("new title", "new content");
+        ArticleRequest articleRequest = ArticleRequest.of("new title", "new content", "#new");
         willDoNothing().given(articleService).saveArticle(any(ArticleDto.class));
 
         // When & Then
@@ -306,7 +302,7 @@ class ArticleControllerTest {
     void givenUpdatedArticleInfo_whenRequesting_thenUpdatesNewArticle() throws Exception {
         // Given
         long articleId = 1L;
-        ArticleRequest articleRequest = ArticleRequest.of("new title", "new content");
+        ArticleRequest articleRequest = ArticleRequest.of("new title", "new content", "#new");
         willDoNothing().given(articleService).updateArticle(eq(articleId), any(ArticleDto.class));
 
         // When & Then
@@ -350,7 +346,7 @@ class ArticleControllerTest {
                 createUserAccountDto(),
                 "title",
                 "content",
-                Set.of(HashtagDto.of("java"))
+                "#java"
         );
     }
 
@@ -361,7 +357,7 @@ class ArticleControllerTest {
                 Set.of(),
                 "title",
                 "content",
-                Set.of(HashtagDto.of("java")),
+                "#java",
                 LocalDateTime.now(),
                 "uno",
                 LocalDateTime.now(),
