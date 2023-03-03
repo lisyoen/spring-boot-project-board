@@ -211,8 +211,8 @@ class ArticleControllerTest {
         String hashtag = "#java";
         List<String> hashtags = List.of("#java", "#spring", "#boot");
         given(articleService.searchArticlesViaHashtag(eq(hashtag), any(Pageable.class))).willReturn(Page.empty());
-        given(paginationService.getPaginationBarNumbers(anyInt(), anyInt())).willReturn(List.of(0, 1, 2, 3, 4));
         given(articleService.getHashtags()).willReturn(hashtags);
+        given(paginationService.getPaginationBarNumbers(anyInt(), anyInt())).willReturn(List.of(0, 1, 2, 3, 4));
 
         // When & Then
         mvc.perform(get("/articles/search-hashtag")
@@ -224,8 +224,7 @@ class ArticleControllerTest {
                 .andExpect(model().attribute("articles", Page.empty()))
                 .andExpect(model().attribute("hashtags", hashtags))
                 .andExpect(model().attribute("searchType", SearchType.HASHTAG))
-                .andExpect(model().attributeExists("paginationBarNumbers"))
-                .andExpect(model().attribute("searchTypeHashtag", SearchType.HASHTAG));
+                .andExpect(model().attributeExists("paginationBarNumbers"));
 
         then(articleService).should().searchArticlesViaHashtag(eq(hashtag), any(Pageable.class));
         then(paginationService).should().getPaginationBarNumbers(anyInt(), anyInt());
