@@ -47,8 +47,8 @@ public record ArticleCommentResponse(
                 dto.parentCommentId()
         );
     }
-
     public boolean hasPrentComment() {
         return parentCommentId != null;
     }
+
 }

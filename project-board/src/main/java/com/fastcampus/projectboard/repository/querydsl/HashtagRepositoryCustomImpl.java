@@ -19,4 +19,5 @@ public class HashtagRepositoryCustomImpl extends QuerydslRepositorySupport imple
                 .select(hashtag.hashtagName)
                 .fetch();
     }
+
 }

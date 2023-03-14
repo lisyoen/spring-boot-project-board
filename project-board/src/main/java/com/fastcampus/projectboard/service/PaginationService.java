@@ -19,4 +19,5 @@ public class PaginationService {
     public int currentBarLength() {
         return BAR_LENGTH;
     }
+    
 }

@@ -11,8 +11,11 @@ import com.fastcampus.projectboard.dto.UserAccountDto;
 import com.fastcampus.projectboard.repository.ArticleRepository;
 import com.fastcampus.projectboard.repository.HashtagRepository;
 import com.fastcampus.projectboard.repository.UserAccountRepository;
+import org.aspectj.lang.annotation.Before;
 import org.assertj.core.api.InstanceOfAssertFactories;
 import org.assertj.core.api.InstanceOfAssertFactory;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -40,7 +43,6 @@ import static org.mockito.BDDMockito.*;
 @ExtendWith(MockitoExtension.class)
 class ArticleServiceTest {
     @InjectMocks private ArticleService sut;
-
     @Mock private HashtagService hashtagService;
     @Mock private ArticleRepository articleRepository;
     @Mock private UserAccountRepository userAccountRepository;

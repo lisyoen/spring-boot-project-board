@@ -1,7 +1,6 @@
 package com.fastcampus.projectboard.repository;
 
 import com.fastcampus.projectboard.domain.Hashtag;
-import com.fastcampus.projectboard.repository.querydsl.ArticleRepositoryCustom;
 import com.fastcampus.projectboard.repository.querydsl.HashtagRepositoryCustom;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
