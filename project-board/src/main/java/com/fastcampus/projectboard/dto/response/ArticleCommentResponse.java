@@ -3,6 +3,9 @@ package com.fastcampus.projectboard.dto.response;
 import com.fastcampus.projectboard.dto.ArticleCommentDto;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * A DTO for the {@link com.fastcampus.projectboard.domain.ArticleComment} entity
@@ -13,10 +16,19 @@ public record ArticleCommentResponse(
         LocalDateTime createdAt,
         String email,
         String nickname,
-        String userId
+        String userId,
+        Long parentCommentId,
+        Set<ArticleCommentResponse> childComments
 ) {
     public static ArticleCommentResponse of(Long id, String content, LocalDateTime createdAt, String email, String nickname, String userId) {
-        return new ArticleCommentResponse(id, content, createdAt, email, nickname, userId);
+        return ArticleCommentResponse.of(id, content, createdAt, email, nickname, userId, null);
+    }
+
+    public static ArticleCommentResponse of(Long id, String content, LocalDateTime createdAt, String email, String nickname, String userId, Long parentCommentId) {
+        Comparator<ArticleCommentResponse> comparator = Comparator
+                .comparing(ArticleCommentResponse::createdAt)
+                .thenComparingLong(ArticleCommentResponse::id);
+        return new ArticleCommentResponse(id, content, createdAt, email, nickname, userId, parentCommentId, new TreeSet<>(comparator));
     }
 
     public static ArticleCommentResponse from(ArticleCommentDto dto) {
@@ -25,13 +37,18 @@ public record ArticleCommentResponse(
             nickname = dto.userAccountDto().userId();
         }
 
-        return new ArticleCommentResponse(
+        return ArticleCommentResponse.of(
                 dto.id(),
                 dto.content(),
                 dto.createdAt(),
                 dto.userAccountDto().email(),
                 nickname,
-                dto.userAccountDto().userId()
+                dto.userAccountDto().userId(),
+                dto.parentCommentId()
         );
+    }
+
+    public boolean hasPrentComment() {
+        return parentCommentId != null;
     }
 }
