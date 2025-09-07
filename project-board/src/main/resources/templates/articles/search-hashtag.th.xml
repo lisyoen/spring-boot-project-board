@@ -17,7 +17,7 @@
 
         <attr sel="#article-table">
             <attr sel="thead/tr">
-                <attr sel="th.title/a" th:text="'제목'" th:href="@{/articles/search-hashtag(
+                <attr sel="th.title/a" th:text="'게시글제목'" th:href="@{/articles/search-hashtag(
             page=${articles.number},
             sort='title' + (*{sort.getOrderFor('title')} != null ? (*{sort.getOrderFor('title').direction.name} != 'DESC' ? ',desc' : '') : ''),
             searchType=${searchType.name},
