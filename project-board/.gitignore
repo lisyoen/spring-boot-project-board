@@ -7,6 +7,7 @@
 
 # QueryDSL
 /src/main/generated
+/bin/generated-sources/annotations/
 
 # JPA Buddy
 .jpb/
@@ -98,6 +99,9 @@ fabric.properties
 ### Java ###
 # Compiled class file
 *.class
+
+# Compiled files
+/bin/
 
 # Log file
 *.log
