@@ -36,8 +36,12 @@ Write-Output "3. 8080 포트 사용 프로세스 종료 시도..."
 $process = Get-NetTCPConnection -LocalPort 8080 -ErrorAction SilentlyContinue | Select-Object -First 1
 if ($process) {
     $pidToStop = $process.OwningProcess
-    Stop-Process -Id $pidToStop -Force
-    Start-Sleep -Seconds 5
+    if ($pidToStop -ne 0) {
+        Stop-Process -Id $pidToStop -Force
+        Start-Sleep -Seconds 5
+    } else {
+        Write-Output "   -> Idle 프로세스(PID 0)는 종료하지 않습니다."
+    }
 } else {
     Write-Output "   -> 실행 중인 프로세스 없음"
 }
