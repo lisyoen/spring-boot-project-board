@@ -34,16 +34,37 @@ if (Test-Path ".\gradlew.bat") {
 # 3. 기존 실행 중인 애플리케이션 종료
 Write-Output "3. 8080 포트 사용 프로세스 종료 시도..."
 $process = Get-NetTCPConnection -LocalPort 8080 -ErrorAction SilentlyContinue | Select-Object -First 1
-if ($process) {
+$pidToStop = $null
+if ($process -and $process.OwningProcess -and $process.OwningProcess -ne 0) {
     $pidToStop = $process.OwningProcess
-    if ($pidToStop -ne 0) {
-        Stop-Process -Id $pidToStop -Force
-        Start-Sleep -Seconds 5
+    Write-Output "   -> 종료 대상 PID: $pidToStop (PowerShell)"
+} elseif ($process -and ($process.OwningProcess -eq 0 -or -not $process.OwningProcess)) {
+    # netstat로 재확인
+    $netstatLine = netstat -ano | Select-String ":8080" | Select-Object -First 1
+    if ($netstatLine) {
+        $fields = $netstatLine -split '\s+'
+        $pidNetstat = $fields[-1]
+        if ($pidNetstat -and $pidNetstat -ne '0') {
+            $pidToStop = [int]$pidNetstat
+            Write-Output "   -> 종료 대상 PID: $pidToStop (netstat)"
+        } else {
+            Write-Output "   -> Idle 프로세스(PID 0 또는 null)는 종료하지 않습니다."
+        }
     } else {
-        Write-Output "   -> Idle 프로세스(PID 0)는 종료하지 않습니다."
+        Write-Output "   -> 8080 포트 사용 프로세스 없음 (netstat)"
     }
 } else {
-    Write-Output "   -> 실행 중인 프로세스 없음"
+    Write-Output "   -> 8080 포트 사용 프로세스 없음"
+}
+
+if ($pidToStop -and $pidToStop -ne 0) {
+    try {
+        Stop-Process -Id $pidToStop -Force
+        Write-Output "   -> PID $pidToStop 프로세스 종료 완료"
+        Start-Sleep -Seconds 5
+    } catch {
+        Write-Output "   -> PID $pidToStop 종료 실패: $_"
+    }
 }
 
 # 4. 애플리케이션 재시작
